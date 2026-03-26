@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>滴泪Zone</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&family=Noto+Sans+SC:wght@300;400;500&family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&family=DotGothic16&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0509;
+    --surface: #160b11;
+    --surface2: #1e0f17;
+    --border: #5a1e3a;
+    --border-soft: #3a1228;
+    --rose: #e0436a;
+    --rose-light: #f07090;
+    --rose-pale: #ffccd9;
+    --black-rose: #c2185b;
+    --lace: #f5e6ec;
+    --lace-dim: #c9a0b4;
+    --text: #f0d8e4;
+    --text-dim: #9e7080;
+    --thorn: #8b1a3a;
+    --gold: #d4a0b0;
+    --star: #f9b8cc;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans SC', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    overflow-x: hidden;
+  }
+
+  /* Background texture */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      radial-gradient(ellipse at 20% 20%, rgba(224,67,106,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(139,26,58,0.12) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 0%, rgba(90,30,58,0.15) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Floating petals */
+  .petal {
+    position: fixed;
+    pointer-events: none;
+    z-index: 1;
+    animation: fall linear infinite;
+    opacity: 0;
+    color: var(--rose);
+    font-size: 12px;
+    user-select: none;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 0.6; }
+    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* Header */
+  .site-header {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 3rem 1rem 2rem;
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  .site-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 200px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--rose), transparent);
+  }
+
+  .logo-star {
+    font-size: 1rem;
+    color: var(--rose);
+    letter-spacing: 0.5rem;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .site-title {
+    font-family: 'DotGothic16', monospace;
+    font-size: clamp(2.2rem, 7vw, 4.5rem);
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    color: var(--rose-pale);
+    text-shadow: 0 0 40px rgba(224,67,106,0.4), 0 0 80px rgba(224,67,106,0.15);
+    line-height: 1.2;
+    image-rendering: pixelated;
+  }
+
+  .site-subtitle {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    color: var(--lace-dim);
+    font-size: 1rem;
+    margin-top: 0.75rem;
+    letter-spacing: 0.15em;
+  }
+
+  .header-deco {
+    color: var(--thorn);
+    font-size: 0.8rem;
+    letter-spacing: 0.4rem;
+    margin-top: 1rem;
+    opacity: 0.7;
+  }
+
+  /* Nav */
+  nav {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    padding: 0;
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  nav a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    padding: 1rem 1.5rem;
+    transition: color 0.3s, background 0.3s;
+    border-right: 1px solid var(--border-soft);
+    position: relative;
+  }
+
+  nav a:first-child { border-left: 1px solid var(--border-soft); }
+
+  nav a:hover, nav a.active {
+    color: var(--rose-light);
+    background: rgba(224,67,106,0.05);
+  }
+
+  nav a.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--rose);
+  }
+
+  /* Main layout */
+  .main-wrap {
+    position: relative;
+    z-index: 5;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  /* Section headers */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .section-header h2 {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 400;
+    font-size: 0.85rem;
+    letter-spacing: 0.3em;
+    color: var(--lace-dim);
+    text-transform: uppercase;
+  }
+
+  .section-header::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+
+  .section-header .icon {
+    color: var(--rose);
+    font-size: 0.9rem;
+  }
+
+  /* Chat area */
+  .chat-container {
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .chat-container::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--rose), var(--thorn), var(--rose), transparent);
+  }
+
+  .chat-header {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border-soft);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .chat-header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .chat-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 0.85rem;
+      letter-spacing: 0.2em;
+    color: var(--lace-dim);
+  }
+
+  .live-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--rose);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  .online-count {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+
+  /* Messages */
+  .messages-list {
+    height: 420px;
+    overflow-y: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    scroll-behavior: smooth;
+  }
+
+  .messages-list::-webkit-scrollbar { width: 3px; }
+  .messages-list::-webkit-scrollbar-track { background: transparent; }
+  .messages-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .msg {
+    display: flex;
+    gap: 0.75rem;
+    animation: msgIn 0.3s ease-out;
+  }
+
+  @keyframes msgIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .msg-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    background: var(--surface2);
+    color: var(--rose-light);
+  }
+
+  .msg-body { flex: 1; min-width: 0; }
+
+  .msg-meta {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .msg-name {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--rose-light);
+    letter-spacing: 0.05em;
+  }
+
+  .msg-name.mod { color: var(--gold); }
+  .msg-name.admin { color: #f9b8cc; }
+
+  .msg-time {
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+  }
+
+  .msg-tag {
+    font-size: 0.6rem;
+    padding: 1px 6px;
+    border-radius: 2px;
+    border: 1px solid;
+    letter-spacing: 0.1em;
+  }
+
+  .msg-tag.mod-tag {
+    color: var(--gold);
+    border-color: var(--gold);
+    opacity: 0.8;
+  }
+
+  .msg-tag.admin-tag {
+    color: var(--rose);
+    border-color: var(--rose);
+    opacity: 0.8;
+  }
+
+  .msg-text {
+    font-size: 0.88rem;
+    color: var(--text);
+    line-height: 1.7;
+    word-break: break-word;
+  }
+
+  .msg-text .emoji { color: var(--rose-pale); }
+
+  /* System message */
+  .msg-system {
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    padding: 0.25rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .msg-system::before, .msg-system::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--border-soft);
+  }
+
+  /* Input area */
+  .input-area {
+    border-top: 1px solid var(--border-soft);
+    padding: 1rem;
+    background: var(--surface2);
+  }
+
+  .input-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-end;
+  }
+
+  .name-input-wrap {
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .name-label {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+
+  .name-input {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: 3px;
+    padding: 0.35rem 0.6rem;
+    color: var(--rose-light);
+    font-size: 16px;
+    font-family: 'Noto Sans SC', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+    max-width: 180px;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .name-input:focus { border-color: var(--rose); }
+
+  textarea.chat-input {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: 3px;
+    padding: 0.6rem 0.75rem;
+    color: var(--text);
+    font-size: 16px;
+    font-family: 'Noto Sans SC', sans-serif;
+    outline: none;
+    resize: none;
+    transition: border-color 0.2s;
+    height: 72px;
+    line-height: 1.5;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  textarea.chat-input:focus { border-color: var(--rose); }
+  textarea.chat-input::placeholder { color: var(--text-dim); font-style: italic; }
+
+  .send-btn {
+    background: transparent;
+    border: 1px solid var(--rose);
+    color: var(--rose);
+    padding: 0 1rem;
+    height: 72px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    font-family: 'Noto Sans SC', sans-serif;
+    transition: all 0.2s;
+    border-radius: 3px;
+    white-space: nowrap;
+    writing-mode: vertical-rl;
+    -webkit-writing-mode: vertical-rl;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .send-btn:hover {
+    background: rgba(224,67,106,0.12);
+    color: var(--rose-light);
+    border-color: var(--rose-light);
+  }
+
+  .send-btn:active { transform: scale(0.97); }
+
+  .char-count {
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    text-align: right;
+    margin-top: 0.3rem;
+    letter-spacing: 0.05em;
+  }
+
+  .char-count.warn { color: #e0436a; }
+
+  /* Emoji quick bar */
+  .emoji-bar {
+    display: flex;
+    gap: 0.4rem;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .emoji-btn {
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: 3px;
+    padding: 0.2rem 0.5rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: border-color 0.2s, background 0.2s;
+    color: var(--rose-pale);
+  }
+
+  .emoji-btn:hover {
+    border-color: var(--rose);
+    background: rgba(224,67,106,0.08);
+  }
+
+  /* Sidebar */
+  .sidebar { display: flex; flex-direction: column; gap: 1rem; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .card-header {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-soft);
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    color: var(--lace-dim);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .card-header .dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--rose);
+  }
+
+  .card-body { padding: 1rem; }
+
+  /* Tags cloud */
+  .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+  .tag {
+    padding: 0.25rem 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    font-size: 0.72rem;
+    color: var(--lace-dim);
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .tag:hover {
+    border-color: var(--rose);
+    color: var(--rose-light);
+    background: rgba(224,67,106,0.06);
+  }
+
+  .tag.hot {
+    border-color: var(--thorn);
+    color: var(--rose-pale);
+    background: rgba(139,26,58,0.15);
+  }
+
+  /* Online users */
+  .user-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  .user-item:last-child { border-bottom: none; }
+
+  .user-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--rose);
+    flex-shrink: 0;
+  }
+
+  .user-dot.idle { background: var(--text-dim); }
+
+  .user-name-text {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    flex: 1;
+  }
+
+  .user-name-text.you { color: var(--rose-light); }
+
+  .user-star {
+    font-size: 0.65rem;
+    color: var(--thorn);
+  }
+
+  /* About card */
+  .about-text {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    line-height: 1.9;
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 300;
+  }
+
+  .about-text p { margin-bottom: 0.6rem; }
+  .about-text strong { color: var(--rose-pale); font-weight: 400; }
+
+  /* Divider ornament */
+  .ornament {
+    text-align: center;
+    color: var(--border);
+    font-size: 0.75rem;
+    letter-spacing: 0.5rem;
+    padding: 0.5rem 0;
+  }
+
+  /* Rules */
+  .rule-item {
+    display: flex;
+    gap: 0.6rem;
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    padding: 0.35rem 0;
+    line-height: 1.5;
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  .rule-item:last-child { border-bottom: none; }
+
+  .rule-num {
+    color: var(--rose);
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.7rem;
+    flex-shrink: 0;
+    padding-top: 0.1rem;
+  }
+
+  /* Footer */
+  footer {
+    position: relative;
+    z-index: 5;
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid var(--border-soft);
+    color: var(--text-dim);
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+  }
+
+  footer span { color: var(--rose); }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .main-wrap {
+      grid-template-columns: 1fr;
+      padding: 1rem;
+      gap: 1rem;
+    }
+    .sidebar { order: -1; }
+    nav { flex-wrap: wrap; }
+    nav a {
+      padding: 0.65rem 0.9rem;
+      font-size: 0.72rem;
+      flex: 1;
+      text-align: center;
+      border-left: none;
+      border-right: none;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    nav a:first-child { border-left: none; }
+    .site-header { padding: 2rem 1rem 1.5rem; }
+    .messages-list { height: 320px; }
+    .send-btn {
+      writing-mode: horizontal-tb;
+      -webkit-writing-mode: horizontal-tb;
+      height: auto;
+      padding: 0.65rem 1rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      align-self: flex-end;
+      width: auto;
+    }
+    textarea.chat-input { height: 60px; }
+    .input-area { padding: 0.75rem; }
+    .name-input { max-width: 100%; }
+    .name-input-wrap { flex-wrap: wrap; }
+    #page-outfits { padding: 1rem; }
+    .outfit-grid { grid-template-columns: repeat(2, 1fr); }
+    .main-wrap { padding: 1rem; }
+  }
+
+  @media (max-width: 380px) {
+    .outfit-grid { grid-template-columns: 1fr; }
+    .messages-list { height: 260px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Floating petals -->
+<div id="petals"></div>
+
+<!-- Header -->
+<header class="site-header">
+  <span class="logo-star">✦ ✦ ✦</span>
+  <h1 class="site-title">滴泪Zone</h1>
+  <p class="site-subtitle">underground aesthetic collective</p>
+  <div class="header-deco">✿ 荆棘玫瑰 · 黑色蕾丝 · 星形泪痕 ✿</div>
+</header>
+
+<!-- Nav -->
+<nav>
+  <a href="#" class="active" onclick="showPage('chat',this)">✦ 聊天区</a>
+  <a href="#" onclick="showPage('outfits',this)">∘ 搭配分享</a>
+</nav>
+
+<!-- Outfits page -->
+<div id="page-outfits" style="display:none; position:relative; z-index:5; max-width:900px; margin:0 auto; padding:2rem 1.5rem;">
+  <div class="section-header"><span class="icon">✦</span><h2>搭配分享</h2></div>
+  <div style="display:flex; flex-direction:column; gap:2.5rem;">
+    <div>
+      <div class="outfit-label">∘ 01 · 黑蕾丝层叠系</div>
+      <div class="outfit-grid">
+        <div class="outfit-card"><div class="outfit-placeholder">替换为图片</div></div>
+        <div class="outfit-card"><div class="outfit-placeholder">替换为图片</div></div>
+        <div class="outfit-card"><div class="outfit-placeholder">替换为图片</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="outfit-label">∘ 02 · 甜暗玫瑰系</div>
+      <div class="outfit-grid">
+        <div class="outfit-card"><div class="outfit-placeholder">替换为图片</div></div>
+        <div class="outfit-card"><div class="outfit-placeholder">替换为图片</div></div>
+        <div class="outfit-card"><div class="outfit-placeholder">替换为图片</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="outfit-label">∘ 03 · 泪痕妆容搭配</div>
+      <div class="outfit-grid">
+        <div class="outfit-card"><div class="outfit-placeholder">替换为图片</div></div>
+        <div class="outfit-card"><div class="outfit-placeholder">替换为图片</div></div>
+        <div class="outfit-card"><div class="outfit-placeholder">替换为图片</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="outfit-label">∘ 04 · 荆棘哥特系</div>
+      <div class="outfit-grid">
+        <div class="outfit-card"><div class="outfit-placeholder">替换为图片</div></div>
+        <div class="outfit-card"><div class="outfit-placeholder">替换为图片</div></div>
+        <div class="outfit-card"><div class="outfit-placeholder">替换为图片</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main -->
+<div id="page-chat" class="main-wrap">
+
+  <!-- Chat -->
+  <div>
+    <div class="section-header">
+      <span class="icon">✦</span>
+      <h2>地下聊天室</h2>
+    </div>
+
+    <div class="chat-container">
+      <div class="chat-header">
+        <div class="chat-header-left">
+          <div class="live-dot"></div>
+        </div>
+        <span class="online-count" id="online-count">✦ 7 在线</span>
+      </div>
+
+      <!-- Search bar -->
+      <div id="search-bar" style="padding:0.6rem 1rem; border-bottom:1px solid var(--border-soft); display:flex; align-items:center; gap:0.5rem; background:var(--surface2);">
+        <span style="font-size:0.75rem; color:var(--text-dim); flex-shrink:0;">✦</span>
+        <input type="text" id="search-input" placeholder="搜索聊天记录…" maxlength="50"
+          style="flex:1; background:transparent; border:none; outline:none; font-size:0.82rem; color:var(--text); font-family:'Noto Sans SC',sans-serif; letter-spacing:0.05em;"
+          oninput="searchMessages(this.value)" />
+        <span id="search-count" style="font-size:0.7rem; color:var(--text-dim); letter-spacing:0.05em; white-space:nowrap;"></span>
+        <button onclick="clearSearch()" style="background:none; border:none; cursor:pointer; color:var(--text-dim); font-size:0.75rem; padding:0 0.2rem; line-height:1;" title="清除">✕</button>
+      </div>
+
+      <div class="messages-list" id="messages">
+        <!-- Messages injected by JS -->
+      </div>
+
+      <div class="input-area">
+        <div class="name-input-wrap">
+          <span class="name-label">✦ 昵称</span>
+          <input type="text" class="name-input" id="username" placeholder="" maxlength="12" />
+        </div>
+        <div class="input-row">
+          <textarea class="chat-input" id="chat-input" placeholder="在这里说些什么吧…" maxlength="200"></textarea>
+          <button class="send-btn" onclick="sendMessage()">发 送</button>
+        </div>
+        <div class="char-count" id="char-count">0 / 200</div>
+        <div id="send-warn" style="display:none; font-size:0.75rem; color:var(--rose); letter-spacing:0.1em; margin-top:0.4rem;">✦ 禁止发送网址或二维码相关内容</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+
+    <!-- Online users -->
+    <div class="card">
+      <div class="card-header"><div class="dot"></div>在线成员</div>
+      <div class="card-body" style="padding: 0.75rem 1rem;">
+        <div class="user-item">
+          <div class="user-dot"></div>
+          <span class="user-name-text you" id="my-username">地雷少女</span>
+          <span class="user-star">✦ 你</span>
+        </div>
+        <div class="user-item">
+          <div class="user-dot"></div>
+          <span class="user-name-text">黑蔷薇Kira</span>
+          <span class="user-star">★</span>
+        </div>
+        <div class="user-item">
+          <div class="user-dot"></div>
+          <span class="user-name-text">茨の夢</span>
+        </div>
+        <div class="user-item">
+          <div class="user-dot idle"></div>
+          <span class="user-name-text">月光少女ver2</span>
+        </div>
+        <div class="user-item">
+          <div class="user-dot"></div>
+          <span class="user-name-text">poison.doll</span>
+        </div>
+        <div class="user-item">
+          <div class="user-dot idle"></div>
+          <span class="user-name-text">rotten_lace</span>
+        </div>
+        <div class="user-item">
+          <div class="user-dot"></div>
+          <span class="user-name-text">Noir★Aria</span>
+          <span class="user-star">★</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  滴泪Zone &nbsp;✦&nbsp; <span>黑色蕾丝</span> · <span>玫瑰荆棘</span> · <span>暗夜星辰</span>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://snbmdbxwrzjdnpyphvnr.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_IXfZzKbuWqKID8Fq7d0pWw_RIug6wM4';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const MAX_CHARS = 200;
+let myName = '地雷少女';
+let messages = [];
+let isLoading = true;
+
+function formatTime(dateStr) {
+  const date = dateStr ? new Date(dateStr) : new Date();
+  const beijing = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Shanghai' }));
+  const y = beijing.getFullYear();
+  const mo = String(beijing.getMonth()+1).padStart(2,'0');
+  const d = String(beijing.getDate()).padStart(2,'0');
+  const h = String(beijing.getHours()).padStart(2,'0');
+  const mi = String(beijing.getMinutes()).padStart(2,'0');
+  const today = new Date().toLocaleDateString('en-US', { timeZone: 'Asia/Shanghai' });
+  const msgDay = beijing.toLocaleDateString('en-US', { timeZone: 'Asia/Shanghai' });
+  return today === msgDay ? `${h}:${mi}` : `${mo}-${d} ${h}:${mi}`;
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function renderMessages() {
+  const list = document.getElementById('messages');
+  list.innerHTML = '';
+  if (isLoading) {
+    list.innerHTML = '<div class="msg-system">✦ 加载中…</div>';
+    return;
+  }
+  if (messages.length === 0) {
+    list.innerHTML = '<div class="msg-system">✦ 还没有消息，来说第一句话吧</div>';
+    return;
+  }
+  messages.forEach(m => {
+    const isMe = m.username === myName;
+    const div = document.createElement('div');
+    div.className = 'msg';
+    if (isMe) div.style.flexDirection = 'row-reverse';
+    const avatar = m.avatar || m.username.charAt(0);
+    div.innerHTML = `
+      <div class="msg-avatar">${escapeHtml(avatar)}</div>
+      <div class="msg-body" style="${isMe ? 'text-align:right;' : ''}">
+        <div class="msg-meta" style="${isMe ? 'flex-direction:row-reverse;' : ''}">
+          <span class="msg-name">${escapeHtml(m.username)}</span>
+          <span class="msg-time">${formatTime(m.created_at)}</span>
+        </div>
+        <div class="msg-text">${escapeHtml(m.content)}</div>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+  list.scrollTop = list.scrollHeight;
+}
+
+async function loadMessages() {
+  isLoading = true;
+  renderMessages();
+  const { data, error } = await supabase
+    .from('messages')
+    .select('*')
+    .order('created_at', { ascending: true })
+    .limit(100);
+  if (error) {
+    console.error('加载失败:', error);
+    document.getElementById('messages').innerHTML = '<div class="msg-system">✦ 加载失败，请刷新重试</div>';
+    isLoading = false;
+    return;
+  }
+  messages = data || [];
+  isLoading = false;
+  renderMessages();
+}
+
+function subscribeRealtime() {
+  supabase
+    .channel('messages-channel')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
+      messages.push(payload.new);
+      renderMessages();
+    })
+    .subscribe();
+}
+
+const sensitiveWords = [
+  '做爱','性爱','射精','插入','肉棒','鸡巴','屌','阴茎','阴道','乳头','裸体','裸照','色情','A片','AV','黄片','援交','卖淫','嫖娼','约炮','一夜情','性交','口交','肛交','自慰','手淫','淫','骚货','婊子','妓女','鸡女',
+  '赌博','赌场','博彩','押注','下注','百家乐','老虎机','彩票平台','洗码',
+  '毒品','大麻','冰毒','海洛因','可卡因','K粉','摇头丸','吸毒','贩毒','买药',
+  '杀人','爆头','砍死','捅死','枪杀','炸弹','自杀方法',
+  '加微信','加QQ','加我','私聊','私信我','联系我','免费送','点击领取','扫我','转账','汇款',
+];
+
+function containsBlocked(text) {
+  const urlPattern = /(https?:\/\/|www\.|\S+\.(com|cn|net|org|io|cc|me|tv|xyz|app|top|vip|club|shop|link|site|info|co)\b)/i;
+  const qrPattern = /二维码|qr\s*code|扫码|扫一扫/i;
+  if (urlPattern.test(text) || qrPattern.test(text)) return 'link';
+  const lower = text.toLowerCase();
+  for (const w of sensitiveWords) {
+    if (lower.includes(w.toLowerCase())) return 'sensitive';
+  }
+  return false;
+}
+
+async function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const nameInput = document.getElementById('username');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const blocked = containsBlocked(text);
+  if (blocked) {
+    const warn = document.getElementById('send-warn');
+    warn.textContent = blocked === 'link' ? '✦ 禁止发送网址或二维码相关内容' : '✦ 消息包含违禁内容，无法发送';
+    warn.style.display = 'block';
+    setTimeout(() => { warn.style.display = 'none'; }, 3000);
+    return;
+  }
+
+  document.getElementById('send-warn').style.display = 'none';
+  myName = nameInput.value.trim() || '地雷少女';
+  document.getElementById('my-username').textContent = myName;
+
+  const btn = document.querySelector('.send-btn');
+  btn.disabled = true;
+  input.value = '';
+  updateCharCount();
+
+  const { error } = await supabase.from('messages').insert({
+    username: myName,
+    avatar: myName.charAt(0),
+    content: text,
+  });
+
+  if (error) {
+    console.error('发送失败:', error);
+    const warn = document.getElementById('send-warn');
+    warn.textContent = '✦ 发送失败，请稍后重试';
+    warn.style.display = 'block';
+    setTimeout(() => { warn.style.display = 'none'; }, 3000);
+    input.value = text;
+    updateCharCount();
+  }
+  btn.disabled = false;
+}
+
+function updateCharCount() {
+  const input = document.getElementById('chat-input');
+  const count = input.value.length;
+  const el = document.getElementById('char-count');
+  el.textContent = `${count} / ${MAX_CHARS}`;
+  el.className = 'char-count' + (count > 160 ? ' warn' : '');
+}
+
+function searchMessages(query) {
+  const q = query.trim().toLowerCase();
+  const list = document.getElementById('messages');
+  const countEl = document.getElementById('search-count');
+  if (!q) {
+    list.querySelectorAll('.msg, .msg-system').forEach(el => {
+      el.style.display = '';
+      el.querySelectorAll('mark').forEach(m => { m.outerHTML = m.textContent; });
+    });
+    countEl.textContent = '';
+    return;
+  }
+  let matched = 0;
+  list.querySelectorAll('.msg').forEach(el => {
+    const textEl = el.querySelector('.msg-text');
+    const nameEl = el.querySelector('.msg-name');
+    const raw = (textEl ? textEl.textContent : '') + (nameEl ? nameEl.textContent : '');
+    if (raw.toLowerCase().includes(q)) {
+      el.style.display = '';
+      matched++;
+      if (textEl) {
+        const escaped = textEl.textContent.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        const re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi');
+        textEl.innerHTML = escaped.replace(re, m => `<mark style="background:rgba(224,67,106,0.3);color:var(--rose-pale);border-radius:2px;padding:0 2px;">${m}</mark>`);
+      }
+    } else {
+      el.style.display = 'none';
+    }
+  });
+  list.querySelectorAll('.msg-system').forEach(el => el.style.display = 'none');
+  countEl.textContent = matched ? `${matched} 条` : '无结果';
+}
+
+function clearSearch() {
+  const input = document.getElementById('search-input');
+  input.value = '';
+  searchMessages('');
+  input.focus();
+}
+
+document.getElementById('chat-input').addEventListener('input', updateCharCount);
+document.getElementById('chat-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+});
+document.getElementById('username').addEventListener('input', () => {
+  const val = document.getElementById('username').value.trim() || '地雷少女';
+  document.getElementById('my-username').textContent = val;
+});
+
+// Floating petals
+function createPetal() {
+  const petals = document.getElementById('petals');
+  const petal = document.createElement('div');
+  petal.className = 'petal';
+  petal.textContent = ['✦','✿','⊹','✧','❋'][Math.floor(Math.random()*5)];
+  petal.style.left = Math.random() * 100 + 'vw';
+  petal.style.animationDuration = (8 + Math.random() * 12) + 's';
+  petal.style.animationDelay = (Math.random() * 5) + 's';
+  petal.style.fontSize = (8 + Math.random() * 8) + 'px';
+  petal.style.opacity = 0.3 + Math.random() * 0.3;
+  petals.appendChild(petal);
+  setTimeout(() => petal.remove(), 20000);
+}
+setInterval(createPetal, 1500);
+for (let i = 0; i < 5; i++) setTimeout(createPetal, i * 300);
+
+function showPage(page, el) {
+  document.getElementById('page-chat').style.display = page === 'chat' ? '' : 'none';
+  document.getElementById('page-outfits').style.display = page === 'outfits' ? 'block' : 'none';
+  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+  el.classList.add('active');
+}
+
+loadMessages();
+subscribeRealtime();
+</script>
+
+<style>
+.outfit-label {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.25em;
+  color: var(--lace-dim);
+  margin-bottom: 1rem;
+}
+.outfit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+.outfit-card {
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 4px;
+  overflow: hidden;
+  aspect-ratio: 3/4;
+  position: relative;
+}
+.outfit-card img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+.outfit-card:hover img { transform: scale(1.04); }
+.outfit-placeholder {
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  letter-spacing: 0.15em;
+  border: 1px dashed var(--border-soft);
+  border-radius: 4px;
+}
+</style>
+</body>
+</html>
